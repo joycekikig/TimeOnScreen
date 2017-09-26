@@ -60,9 +60,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         switch (v.getId()) {
             case R.id.date12btn:
                 timeText.setText(date12SDF.format(new Date()));
+                Log.d("xiang_test", "You push 12hr setting !");
                 break;
             case R.id.date24btn:
                 timeText.setText(date24SDF.format(new Date()));
+                Log.d("xiang_test", "You push 24hr setting !");
                 break;
         }
     }
