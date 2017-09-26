@@ -12,18 +12,26 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class MyReceiver extends BroadcastReceiver {
-    private TextView timeText;
+    private TextView mTimeText;
     private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 
+    public MyReceiver(TextView timeText) {
+        mTimeText = timeText;
+    }
+
+    public MyReceiver() {
+
+    }
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
-        if( intent.getAction().compareTo(Intent.ACTION_TIME_TICK) == 0 ) {
+
+        if( intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
             Log.d("test", sdf.format(new Date()));
-            timeText.setText(sdf.format(new Date()));
+            mTimeText.setText(sdf.format(new Date()));
             Log.d("test", "12132132132132");
         }
-        throw new UnsupportedOperationException("Not yet implemented");
+
     }
 }

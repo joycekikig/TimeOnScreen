@@ -11,16 +11,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.xiangyunlin.timeonscrean.MyReceiver;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener {
-    private static BroadcastReceiver tickReceiver;
+//    private static BroadcastReceiver tickReceiver;
     private TextView timeText;
     private SimpleDateFormat date12SDF = new SimpleDateFormat("hh:mm a", Locale.ENGLISH);
     private SimpleDateFormat date24SDF = new SimpleDateFormat("HH:mm");
-//    private MyReceiver tickReceiver;
+    private MyReceiver tickReceiver;
     private Button AMbtn;
     private Button PMbtn;
     boolean isPressed = false;
@@ -40,11 +42,11 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         timeText.setText(date24SDF.format(new Date()));
         timeText.setTextSize(40);
 
-        /*
-        Intent intent = new Intent(MainActivity.this, MyReceiver.class);
-        tickReceiver = new MyReceiver();
-        */
 
+        //Intent intent = new Intent(MainActivity.this, MyReceiver.class);
+        tickReceiver = new MyReceiver(timeText);
+
+/*
         tickReceiver = new BroadcastReceiver(){
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -52,7 +54,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     timeText.setText(date24SDF.format(new Date()));
                 }
             }
-        };
+        };*/
     }
 
     // click btn to show 12 or 24 hrs setting
