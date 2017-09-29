@@ -12,14 +12,16 @@
             android:layout_width="250px"
             android:layout_height="100px"
             android:layout_alignParentLeft="true"
-            android:text="12小時制"/>
+            android:text="12小時制"
+            android:layout_above="@+id/timeText"/>
         <!-- Button View to set PM -->
         <Button
             android:id="@+id/date24btn"
             android:layout_width="250px"
             android:layout_height="100px"
             android:layout_alignParentRight="true"
-            android:text="24小時制"/>
+            android:text="24小時制"
+            android:layout_above="@+id/timeText"/>
         <!-- Text View to show time -->
         <TextView
             android:id="@+id/timeText"

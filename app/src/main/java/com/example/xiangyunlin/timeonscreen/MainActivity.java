@@ -1,9 +1,9 @@
 package com.example.xiangyunlin.timeonscreen;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     private MyReceiver tickReceiver;
     private Button AMbtn;
     private Button PMbtn;
-    boolean isPressed = false;
+    boolean isdate12Pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +39,12 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         PMbtn.setOnClickListener(this);
 
         timeText = (TextView) findViewById(R.id.timeText);
-        timeText.setText(date24SDF.format(new Date()));
-        timeText.setTextSize(40);
 
 
         //Intent intent = new Intent(MainActivity.this, MyReceiver.class);
-        tickReceiver = new MyReceiver(timeText);
+        tickReceiver = new MyReceiver(this);
 
-/*
+        /*
         tickReceiver = new BroadcastReceiver(){
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -54,18 +52,21 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
                     timeText.setText(date24SDF.format(new Date()));
                 }
             }
-        };*/
+        };
+        */
     }
 
     // click btn to show 12 or 24 hrs setting
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.date12btn:
-                timeText.setText(date12SDF.format(new Date()));
+                isdate12Pressed = true;
+                date12SDFSetting();
                 Log.d("xiang_test", "You push 12hr setting !");
                 break;
             case R.id.date24btn:
-                timeText.setText(date24SDF.format(new Date()));
+                isdate12Pressed = false;
+                date24SDFSetting();
                 Log.d("xiang_test", "You push 24hr setting !");
                 break;
         }
@@ -75,30 +76,64 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
     public void onStop()
     {
         super.onStop();
+
         //unregister broadcast receiver.
         if( tickReceiver != null )
             unregisterReceiver(tickReceiver);
-        Log.d("xiang_test", "2222222222222222222222");
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //register broadcast receiver.
-        registerReceiver(tickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        Log.d("xiang_test", "You push onStop !");
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("xiang_test", "11111111111");
+
+        // Use the SharedPreferences to save the user last setting (like config idea)
+        if(isdate12Pressed)
+            getSharedPreferences("hrSetting", 0).edit().putBoolean("date12SDF", true).apply();
+        else
+            getSharedPreferences("hrSetting", 0).edit().putBoolean("date12SDF", false).apply();
+        Log.d("xiang_test", "You push onPause !");
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("xiang_test", "3333333333333");
+        Log.d("xiang_test", "You push onDestroy !");
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+        //register broadcast receiver.
+        registerReceiver(tickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+
+        // Use the SharedPreferences to read the user last setting
+        isdate12Pressed = getSharedPreferences("hrSetting", 0).getBoolean("date12SDF", true);
+
+        if(isdate12Pressed)
+            date12SDFSetting();
+        else
+            date24SDFSetting();
+    }
+
+    public void date12SDFSetting() {
+        timeText.setText(date12SDF.format(new Date()));
+        timeText.setTextSize(40);
+    }
+
+    public void date24SDFSetting() {
+        timeText.setText(date24SDF.format(new Date()));
+        timeText.setTextSize(40);
+    }
+
+    // get the textView
+    public TextView getTimeText() {
+        return timeText;
+    }
+
+    // get the isdate12Pressed
+    public boolean getisdate12Pressed() {
+        return isdate12Pressed;
+    }
 }

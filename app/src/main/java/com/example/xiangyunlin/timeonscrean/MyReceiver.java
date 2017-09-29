@@ -4,34 +4,31 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.TextView;
 
+import com.example.xiangyunlin.timeonscreen.MainActivity;
 import com.example.xiangyunlin.timeonscreen.R;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class MyReceiver extends BroadcastReceiver {
-    private TextView mTimeText;
-    private SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-    public MyReceiver(TextView timeText) {
-        mTimeText = timeText;
-    }
+    MainActivity mActivity;
 
     public MyReceiver() {
 
     }
+
+    public MyReceiver(MainActivity activity) {
+        mActivity = activity;
+    }
+
     @Override
     public void onReceive(Context context, Intent intent) {
         // TODO: This method is called when the BroadcastReceiver is receiving
         // an Intent broadcast.
-
         if( intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
-            Log.d("test", sdf.format(new Date()));
-            mTimeText.setText(sdf.format(new Date()));
-            Log.d("test", "12132132132132");
+            Log.d("test", mActivity.getTimeText().getText().toString());
+            if(mActivity.getisdate12Pressed())
+                mActivity.date12SDFSetting();
+            else
+                mActivity.date24SDFSetting();
         }
-
     }
 }
